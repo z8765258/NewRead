@@ -34,14 +34,19 @@ class Order extends BaseController
         $starttime = input('post.starttime');
         $stoptime = input('post.stoptime');
         $uid = Token::getCurrentUid();
+//        halt($uid);
         $find = OrderModel::getOrderFind($uid,$typeID,$starttime,$stoptime);
+//        halt($find);
         if($find){
             echo '已经存在该订单';
             return $find;
         }
+//        halt($typeID);
         $products = CourseModel::get($typeID);
+//        halt($products);
         $order = new OrderService();
-        $status = $order->place($uid,$products);
+//        halt($order);
+        $status = $order->place($uid,$products,$starttime,$stoptime);
         return $status;
     }
 }
