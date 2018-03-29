@@ -31,8 +31,10 @@ class Order extends BaseController
     {
         (new IDMustBePositiveInt())->goCheck();
         $typeID = input('post.id');
+        $starttime = input('post.starttime');
+        $stoptime = input('post.stoptime');
         $uid = Token::getCurrentUid();
-        $find = OrderModel::getOrderFind($uid,$typeID);
+        $find = OrderModel::getOrderFind($uid,$typeID,$starttime,$stoptime);
         if($find){
             echo '已经存在该订单';
             return $find;

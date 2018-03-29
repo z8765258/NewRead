@@ -29,8 +29,6 @@ class Card extends BaseModel
         $ispass = self::isPass($tid);
         $res = self::create(['tid'=>$tid,'uid'=>Token::getCurrentUid(),'ispass'=> $ispass]);
         return $res;
-
-
     }
 
     /**
@@ -138,7 +136,7 @@ class Card extends BaseModel
     {
         $num = false;
         if(is_numeric($num1) && is_numeric($num2)) {
-            $num = ( $num2 / $num1 ) * 100 ."%";
+            $num = ( $num1 / $num2 ) * 100 ."%";
             $num = 100 - $num . "%";
             return $num;
         } else {

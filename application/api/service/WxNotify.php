@@ -28,7 +28,7 @@ class WxNotify extends \WxPayNotify
                 $order = OrderModel::where('order_no','=',$orderNo)->find();
                 if($order->status == 1){
                     $this->updateOrderStatus($order->id);
-                    $this->createPlan($order->user_id,$order->typeid,$order->openid);
+                    $this->createPlan($order->user_id,$order->typeid,$order->openid,$order->starttime,$order->stoptime);
                 }
                 Db::commit();
             }catch (Exception $e){
@@ -50,14 +50,13 @@ class WxNotify extends \WxPayNotify
         }
     }
 
-    private function createPlan($uid,$tid,$openid)
+    private function createPlan($uid,$tid,$openid,$starttime,$stoptime)
     {
-        $res = PlanModel::create(['uid'=>$uid,'tid'=>$tid,'planday'=>1,'openid',$openid]);
+        $res = PlanModel::create(['uid'=>$uid,'tid'=>$tid,'planday'=>1,'openid'=>$openid,'timestart'=>$starttime,'timeend'=>$stoptime]);
         if(!$res){
             throw new PlanException();
         }
     }
-
 //    private function updateUserStatus($uid)
 //    {
 //       $res = UserModel::where('id','=',$uid)->update(['starts' => 1]);

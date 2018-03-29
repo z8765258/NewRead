@@ -15,6 +15,8 @@ class Order
 {
     protected $uid;
     protected $products;
+    protected $starttime;
+    protected $stoptime;
     function __construct()
     {
     }
@@ -23,9 +25,11 @@ class Order
      * @param $uid int 用户id
      * @param $products array 商品信息
      */
-    public function place($uid,$products)
+    public function place($uid,$products,$starttime,$stoptime)
     {
         $this->products = $products;
+        $this->starttime = $starttime;
+        $this->stoptime = $stoptime;
         $this->uid = $uid;
         $status = self::createOrder();
         return $status;
@@ -42,6 +46,8 @@ class Order
             $order->typename = $this->products['coursename'];
             $order->typeid = $this->products['id'];
             $order->status = 1;
+            $order->starttime = $this->starttime;
+            $order->stoptime = $this->stoptime;
             $order->save();
             $orderID = $order->id;
             $create_time = $order->create_time;

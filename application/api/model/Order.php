@@ -13,10 +13,12 @@ use app\api\service\Token;
 
 class Order extends BaseModel
 {
-    public static function getOrderFind($uid,$typeID)
+    public static function getOrderFind($uid,$typeID,$starttime,$stoptime)
     {
         $whereData['user_id'] = $uid;
         $whereData['typeid'] = $typeID;
+        $whereData['starttime'] = $starttime;
+        $whereData['stoptime'] = $stoptime;
         return self::where($whereData)->find();
     }
 
