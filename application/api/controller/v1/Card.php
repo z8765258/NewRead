@@ -41,6 +41,11 @@ class Card extends BaseController
         return $list;
     }
 
+    /**
+     * @param $id
+     * @return \think\response\Json
+     * 获取用户今日打卡的排名
+     */
     public function getCardRanking($id)
     {
         (new IDMustBePositiveInt())->goCheck();

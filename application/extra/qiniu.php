@@ -7,8 +7,8 @@
  */
 
 return [
-    'ak' =>'y5kgm0RZsmHVvCiU7XvAJeLTDs7Y0aP6mtPKH4Oz',
-    'sk' => 'PEUufqE2EFxSOqk29LGq-7XBxl-S7zlco9IahVA_',
-    'bucket'=> 'test21day',
-    'audio_url' => 'http://p5glypcjo.bkt.clouddn.com'
+    'ak' =>'p1S1zkD6Vuotaw58crIakf_Gz6TjAEDYxZAGpcye',
+    'sk' => 'gAfA89HJxBs009aCY3lwVlkGechPtasqDtDM2YkT',
+    'bucket'=> 'static',
+    'audio_url' => 'http://s.nadou.ixunke.cn'
 ];

@@ -22,13 +22,15 @@ class Card extends BaseModel
 
     public static function createCardRecord($tid)
     {
-        $ispass = self::isPass($tid);
         $isRecord = self::isHaveRecord($tid);
-        if(!$isRecord){
-            $res = self::create(['tid'=>$tid,'uid'=>Token::getCurrentUid(),'ispass'=> $ispass]);
-            return $res;
+        if($isRecord){
+            return false;
         }
-        return false;
+        $ispass = self::isPass($tid);
+        $res = self::create(['tid'=>$tid,'uid'=>Token::getCurrentUid(),'ispass'=> $ispass]);
+        return $res;
+
+
     }
 
     /**
