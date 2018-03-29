@@ -413,6 +413,7 @@ class WxPayApi
 	{
 		//获取通知的数据
 		$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+		\think\Log::error($xml);
 		//如果返回成功则验证签名
 		try {
 			$result = WxPayResults::Init($xml);

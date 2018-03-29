@@ -38,8 +38,12 @@ class Order extends BaseController
         $find = OrderModel::getOrderFind($uid,$typeID,$starttime,$stoptime);
 //        halt($find);
         if($find){
-            echo '已经存在该订单';
-            return $find;
+//            echo '已经存在该订单';
+            return[
+                'order_no' => $find->order_no,
+                'order_id' => $find->id,
+                'create_time' => $find->create_time
+            ];
         }
 //        halt($typeID);
         $products = CourseModel::get($typeID);

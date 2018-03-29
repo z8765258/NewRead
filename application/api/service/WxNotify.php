@@ -11,12 +11,14 @@ namespace app\api\service;
 
 use app\api\model\Order as OrderModel;
 use app\api\model\Plan as PlanModel;
+use app\api\model\User;
 use app\lib\exception\OrderException;
 use app\lib\exception\PlanException;
 use think\Db;
 use think\Exception;
+use think\Loader;
 use think\Log;
-
+Loader::import('WxPay.WxPay',EXTEND_PATH,'.Api.php');
 class WxNotify extends \WxPayNotify
 {
     public function NotifyProcess($data, &$msg)
@@ -28,7 +30,8 @@ class WxNotify extends \WxPayNotify
                 $order = OrderModel::where('order_no','=',$orderNo)->find();
                 if($order->status == 1){
                     $this->updateOrderStatus($order->id);
-                    $this->createPlan($order->user_id,$order->typeid,$order->openid,$order->starttime,$order->stoptime);
+                    $find = User::get($order->user_id);
+                    $this->createPlan($order->user_id,$order->typeid,$find->openid,$order->starttime,$order->stoptime);
                 }
                 Db::commit();
             }catch (Exception $e){

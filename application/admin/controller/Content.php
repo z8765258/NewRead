@@ -36,7 +36,7 @@ class Content extends BaseController
                 explode('文件上传失败',400);
             }
             $data['leaaudio'] = config('qiniu.audio_url').'/'.$audio;
-            $data['detailAudio'] = config('qiniu.audio_url').'/'.$detailAudio;
+            $data['detailaudio'] = config('qiniu.audio_url').'/'.$detailAudio;
             try{
                 $id = $content->add($data);
             }catch (\Exception $e){

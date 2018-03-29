@@ -28,7 +28,7 @@ class Pay extends BaseController
         return $payParam;
     }
 
-    public function redirectNotify()
+    public function receiveNotify()
     {
         $notify = new WxNotify();
         $notify->Handle();
