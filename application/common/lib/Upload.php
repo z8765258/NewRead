@@ -20,9 +20,14 @@ class Upload
             explode('提交的文件不合法',404);
         }
 
+
         $filePath = $_FILES[$fileName]['tmp_name'];
         $ext = explode('.',$_FILES[$fileName]['name']);
+        if(empty($ext[1])){
+            return null;
+        }
         $ext = $ext[1];
+
         $config = config('qiniu');
         $auth = new Auth($config['ak'],$config['sk']);
 

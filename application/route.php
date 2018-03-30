@@ -22,6 +22,7 @@ Route::get('api/:ver/cardAll','api/:ver.Card/getCardList');
 Route::get('api/:ver/cardRank','api/:ver.Card/getCardRanking');
 Route::get('api/:ver/wxMessage','api/:ver.WxMessage/sendWxMessage');
 Route::get('api/:ver/queryWord','api/:ver.QueryWord/queryWord');
+Route::get('api/:ver/foreshow','api/:ver.Foreshow/getForeshow');
 
 
 Route::post('api/:ver/token/user','api/:ver.Token/getToken');
