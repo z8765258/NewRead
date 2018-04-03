@@ -13,10 +13,6 @@ use app\api\controller\BaseController;
 use app\api\service\WxMessage as WxMessageService;
 class WxMessage extends BaseController
 {
-//    protected $beforeActionList = [
-//        'checkPrimaryScope' => ['only' => 'sendWxMessage'],
-//    ];
-
     public function sendWxMessage()
     {
         $wxMessage = new WxMessageService();

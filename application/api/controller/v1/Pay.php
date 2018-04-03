@@ -20,7 +20,7 @@ use app\lib\exception\CardException;
 class Pay extends BaseController
 {
     protected $beforeActionList = [
-        'checkPrimaryScope' => ['only' => 'getPreOrder,refund'],
+        'checkPrimaryScope' => ['only' => 'getPreOrder,refund,queryRefundPlan'],
     ];
 
     public function getPreOrder($id = '')
@@ -51,5 +51,17 @@ class Pay extends BaseController
         $pay = new PayService($order->id);
         $refund = $pay->refund();
         return $refund;
+    }
+
+    /**
+     * 查询退款进度
+     */
+    public function queryRefundPlan($id = '')
+    {
+        (new IDMustBePositiveInt())->goCheck();
+        $order = OrderModel::getPayOrder($id);
+        $Pay = new PayService($order->id);
+        $result = $Pay->queryRefund($id);
+        return $result;
     }
 }

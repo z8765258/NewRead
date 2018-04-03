@@ -116,7 +116,6 @@ class Card extends BaseModel
                 array_push($arr,$cards[$i]);
             }
         }
-        halt(count($arr) + 1);
         return count($arr) + 1;
     }
 
@@ -125,7 +124,6 @@ class Card extends BaseModel
         $pays = Order::where('typeid','=',$id)->count();
         $cards = self::where('tid','=',$id)->select();
         $card = self::isHorizon($cards);
-
         $arr['surpass'] = self::getNum($card,$pays);
         $arr['cardNum'] = self::uidCardNums($cards);
         return $arr;

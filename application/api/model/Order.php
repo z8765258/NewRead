@@ -27,6 +27,7 @@ class Order extends BaseModel
         $uid = Token::getCurrentUid();
         $whereData['user_id'] = $uid;
         $whereData['typeid'] = $typeID;
+        $whereData['status'] = 2;
         return self::where($whereData)->find();
     }
 

@@ -31,6 +31,11 @@ class Pay
         $this->orderID = $orderID;
     }
 
+    /**
+     * @return \think\response\Json
+     * @throws WxRefundException
+     * 申请退款
+     */
     public function refund()
     {
         if($this->checkOrderUser()){
@@ -42,6 +47,41 @@ class Pay
                 throw new WxRefundException();
             }
             return json(['refund_fee'=>$result['refund_fee'],'return_msg'=>$result['return_msg']]);
+        }
+    }
+
+    /**
+     * @return array
+     * 支付
+     */
+    public function Pay()
+    {
+        if($this->checkOrderValid()){
+            return $this->makeWxPreOrder();
+        }
+    }
+
+    public function queryRefund()
+    {
+        if($this->checkOrderUser()){
+            $query = new \WxPayRefundQuery();
+            $query->SetOut_refund_no($this->products['refund_no']);
+            $result = \WxPayApi::refundQuery($query);
+            if($result['result_code'] != 'SUCCESS' || $result['return_code'] != 'SUCCESS'){
+                Log::record($result,'error');
+                Log::record('查询退款进度失败','error');
+                throw new WxRefundException('查询退款进度失败');
+            }
+            return json([
+                'refund_recv_accout' => $result['refund_recv_accout_0'],
+                'total_fee' => $result['total_fee'],
+                'cash_fee' => $result['cash_fee'],
+                'refund_fee' => $result['refund_fee'],
+//                'return_msg' => $result['return_msg'],
+                'refund_status' => $result['refund_status_0'],
+                'refund_success_time' => $result['refund_success_time_0']
+            ]);
+//            halt($result);
         }
     }
 
@@ -57,12 +97,6 @@ class Pay
         return $refund;
     }
 
-    public function Pay()
-    {
-        if($this->checkOrderValid()){
-            return $this->makeWxPreOrder();
-        }
-    }
 
     /**
      * 构建微信支付订单信息
