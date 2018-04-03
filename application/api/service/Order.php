@@ -39,6 +39,7 @@ class Order
     {
         try{
             $orderNo = self::makeOrderNo();
+            $redundNo = self::makeRefundNo();
             $order = new OrderModel();
             $order->user_id = $this->uid;
             $order->order_no = $orderNo;
@@ -46,6 +47,7 @@ class Order
             $order->typename = $this->products['coursename'];
             $order->typeid = $this->products['id'];
             $order->status = 1;
+            $order->refund_no = $redundNo;
             $order->starttime = $this->starttime;
             $order->stoptime = $this->stoptime;
             $order->save();
@@ -54,6 +56,7 @@ class Order
             return[
                 'order_no' => $orderNo,
                 'order_id' => $orderID,
+                'refund_no' => $redundNo,
                 'create_time' => $create_time
             ];
         }catch (Exception $e){
@@ -70,6 +73,26 @@ class Order
                 'd') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf(
                 '%02d', rand(0, 99));
         return $orderSn;
+    }
+
+    public static function makeRefundNo()
+    {
+        while (true) {
+            $order_date = date('Y-m-d');
+            $order_id_main = date('YmdHis') . rand(10000000, 99999999);
+            //订单号码主体长度
+            $order_id_len = strlen($order_id_main);
+            $order_id_sum = 0;
+
+            for ($i = 0; $i < $order_id_len; $i++) {
+
+                $order_id_sum += (int)(substr($order_id_main, $i, 1));
+
+            }
+            //唯一订单号码（YYYYMMDDHHIISSNNNNNNNNCC）
+            $order_id = $order_id_main . str_pad((100 - $order_id_sum % 100) % 100, 2, '0', STR_PAD_LEFT);
+            return $order_id;
+        }
     }
 
 

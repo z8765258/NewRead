@@ -13,11 +13,14 @@ use app\api\controller\BaseController;
 use app\api\service\WxNotify;
 use app\api\validate\IDMustBePositiveInt;
 use app\api\service\Pay as PayService;
+use app\api\model\Order as OrderModel;
+use app\api\model\Card as CardModel;
+use app\lib\exception\CardException;
 
 class Pay extends BaseController
 {
     protected $beforeActionList = [
-        'checkPrimaryScope' => ['only' => 'getPreOrder'],
+        'checkPrimaryScope' => ['only' => 'getPreOrder,refund'],
     ];
 
     public function getPreOrder($id = '')
@@ -32,5 +35,21 @@ class Pay extends BaseController
     {
         $notify = new WxNotify();
         $notify->Handle();
+    }
+
+    /**
+     * 申请退款
+     */
+    public function courseRefund($id = '')
+    {
+        (new IDMustBePositiveInt())->goCheck();
+        if(!CardModel::verifyCards($id)){
+            throw new CardException();
+        }
+
+        $order = OrderModel::getPayOrder($id);
+        $pay = new PayService($order->id);
+        $refund = $pay->refund();
+        return $refund;
     }
 }

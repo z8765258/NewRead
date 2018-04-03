@@ -84,14 +84,13 @@ class Card extends BaseModel
         {
             return true;
         }
-
         return false;
     }
 
     public static function getCardList($tid)
     {
-
-        $list = self::with('cardCourse')->where('tid','=',$tid)->select();
+        $uid = Token::getCurrentUid();
+        $list = self::with('cardCourse')->where(['tid'=>$tid,'uid'=>$uid])->select();
         return $list;
     }
 
@@ -142,5 +141,40 @@ class Card extends BaseModel
         } else {
             return $num;
         }
+    }
+
+    /**
+     * @param $id
+     * 验证用户的打卡记录 为连续21天且在规定时间内
+     */
+    public static function verifyCards($id)
+    {
+        $uid = Token::getCurrentUid();
+        $whereData['uid'] = $uid;
+        $whereData['ispass'] = 1;
+        $whereData['tid'] = $id;
+        $cards = self::where($whereData)->order('create_time asc')->select();
+        if(count($cards) !== 21){
+            return false;
+        }
+        return self::verifyCardsTime($cards);
+    }
+
+    public static function verifyCardsTime($cards)
+    {
+        $arr = [];
+        for ($i=0;$i<count($cards);$i++){
+            array_push($arr,$cards[$i]['create_time']);
+        }
+        $flag = true;
+        for($i=0;$i<count($arr)-1;$i++){
+            $nextDay = date("Y-m-d",strtotime("+1 day",strtotime($arr[$i])));
+            if(date("Y-m-d",strtotime($arr[$i+1])) !=$nextDay){
+                $flag = false;
+                break;
+            }
+
+        }
+        return $flag;
     }
 }

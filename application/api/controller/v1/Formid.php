@@ -22,10 +22,11 @@ class Formid extends BaseController
     public function disposeFormId()
     {
         $openId = TokenService::getCurrentTokenVar('openid');
-        $cacheKey = md5('user_formId'.$openId);
-        $redis = new Redis();
-
-        halt($redis->rm($cacheKey));
+//        $cacheKey = md5('user_formId'.$openId);
+//        $redis = new Redis();
+//        $data = $redis->get($cacheKey);
+//        halt($data);
+//        halt($redis->rm($cacheKey));
         $formIds = input('post.formIds');
         if($formIds){
             $formIds = json_decode($formIds,true);
@@ -52,9 +53,9 @@ class Formid extends BaseController
     private function _get($openId){
         $cacheKey = md5('user_formId'.$openId);
         $redis = new Redis();
-        $res = $redis->rm($cacheKey);
+//        $res = $redis->rm($cacheKey);
         $data = $redis->get($cacheKey);
-        halt($data);
+//        halt($data);
         if($data){
             if(!is_array($data)){
                 $data = json_decode($data,true);

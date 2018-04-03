@@ -22,6 +22,14 @@ class Order extends BaseModel
         return self::where($whereData)->find();
     }
 
+    public static function getPayOrder($typeID)
+    {
+        $uid = Token::getCurrentUid();
+        $whereData['user_id'] = $uid;
+        $whereData['typeid'] = $typeID;
+        return self::where($whereData)->find();
+    }
+
     public static function getUserPay()
     {
         $uid = Token::getCurrentUid();

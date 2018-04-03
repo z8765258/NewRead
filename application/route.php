@@ -23,6 +23,9 @@ Route::get('api/:ver/cardRank','api/:ver.Card/getCardRanking');
 Route::get('api/:ver/wxMessage','api/:ver.WxMessage/sendWxMessage');
 Route::get('api/:ver/queryWord','api/:ver.QueryWord/queryWord');
 Route::get('api/:ver/foreshow','api/:ver.Foreshow/getForeshow');
+Route::get('api/:ver/refundNo','api/:ver.Order/test');
+Route::get('api/:ver/wxRefund','api/:ver.Pay/courseRefund');
+Route::get('api/:ver/verifyCards','api/:ver.Card/verifyCard');
 
 
 Route::post('api/:ver/token/user','api/:ver.Token/getToken');

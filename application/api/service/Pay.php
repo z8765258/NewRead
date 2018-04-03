@@ -10,6 +10,7 @@ namespace app\api\service;
 
 use app\lib\exception\OrderException;
 use app\lib\exception\TokenException;
+use app\lib\exception\WxRefundException;
 use think\Exception;
 use think\Loader;
 use app\api\model\Order as OrderModel;
@@ -28,6 +29,32 @@ class Pay
             throw new Exception('订单ID不能为空');
         }
         $this->orderID = $orderID;
+    }
+
+    public function refund()
+    {
+        if($this->checkOrderUser()){
+            $refundData = $this->makeWxRefund();
+            $result = \WxPayApi::refund($refundData);
+            if($result['result_code'] != 'SUCCESS' || $result['return_code'] != 'SUCCESS'){
+                Log::record($result,'error');
+                Log::record('退款失败','error');
+                throw new WxRefundException();
+            }
+            return json(['refund_fee'=>$result['refund_fee'],'return_msg'=>$result['return_msg']]);
+        }
+    }
+
+
+    private function makeWxRefund()
+    {
+        $refund = new \WxPayRefund();
+        $refund->SetOut_trade_no($this->products['order_no']);
+        $refund->SetOut_refund_no($this->products['refund_no']);
+        $refund->SetTotal_fee($this->products['price'] * 100);
+        $refund->SetRefund_fee($this->products['price'] * 100);
+        $refund->SetOp_user_id('1459841202');
+        return $refund;
     }
 
     public function Pay()
@@ -50,9 +77,6 @@ class Pay
         $wxOrderData->SetOut_trade_no($this->orderNo);
         $wxOrderData->SetTrade_type('JSAPI');
         $wxOrderData->SetTotal_fee($this->products['price'] * 100);
-//        String spbill_create_ip = request.getRemoteAddr();
-//        $wxOrderData->SetSpbill_create_ip('115.60.163.103');
-//        $wxOrderData->SetSpbill_create_ip('123.57.63.202');
         $wxOrderData->SetBody($this->products['typename']);
         $wxOrderData->SetOpenid($openid);
         $wxOrderData->SetNotify_url(config('wx.callBack_url'));  //微信支付回调地址
@@ -123,6 +147,30 @@ class Pay
             ]);
         }
         $this->orderNo = $order->order_no;
+        $this->products = $order;
+        return true;
+    }
+
+    private function checkOrderUser()
+    {
+        $order = OrderModel::where('id','=',$this->orderID)->find();
+        if(!$order){
+            throw new OrderException();
+        }
+        if(!Token::isValidOperate($order->user_id)){
+            throw new TokenException([
+                'msg' => '此订单和此用户不匹配',
+                'errorCode' => 10003
+            ]);
+        }
+        if($order->status != 2){
+            throw new OrderException([
+                'msg' => '此订单还没有支付不能申请退款',
+                'errorCode' => 80004,
+                'code' => 400
+            ]);
+        }
+//        $this->orderNo = $order->order_no;
         $this->products = $order;
         return true;
     }

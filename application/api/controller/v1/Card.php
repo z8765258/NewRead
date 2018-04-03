@@ -12,11 +12,12 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\model\Card as CardModel;
 use app\api\validate\IDMustBePositiveInt;
+use app\lib\exception\CardException;
 
 class Card extends BaseController
 {
     protected $beforeActionList = [
-        'checkPrimaryScope' => ['only' => 'createCardRecord,getCardList,getCardRanking'],
+        'checkPrimaryScope' => ['only' => 'createCardRecord,getCardList,getCardRanking,verifyCard'],
     ];
 
     /**
@@ -51,5 +52,15 @@ class Card extends BaseController
         (new IDMustBePositiveInt())->goCheck();
         $rank = CardModel::getCardRank($id);
         return json($rank);
+    }
+
+    public function verifyCard($id)
+    {
+        (new IDMustBePositiveInt())->goCheck();
+        $status = CardModel::verifyCards($id);
+        if(!$status){
+            throw new CardException();
+        }
+        return json(['isComplete' => $status]);
     }
 }

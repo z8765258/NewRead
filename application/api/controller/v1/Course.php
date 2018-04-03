@@ -11,7 +11,7 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\model\Course as CourseModel;
 use app\lib\exception\MissException;
-use app\api\model\Order as OrderModel;
+
 class Course extends BaseController
 {
     protected $beforeActionList = [
