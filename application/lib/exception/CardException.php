@@ -11,7 +11,7 @@ namespace app\lib\exception;
 
 class CardException extends BaseException
 {
-    public $code = 403;
+    public $code = 200;
     public $msg = '没有按时连续21天打卡';
     public $errorCode = 10001;
 }

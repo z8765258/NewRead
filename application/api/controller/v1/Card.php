@@ -61,6 +61,6 @@ class Card extends BaseController
         if(!$status){
             throw new CardException();
         }
-        return json(['isComplete' => $status]);
+        return json(['isComplete' => $status,'errorCode' => 0]);
     }
 }
