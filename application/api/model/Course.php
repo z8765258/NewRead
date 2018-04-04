@@ -35,6 +35,4 @@ class Course extends BaseModel
         }
         return $allType;
     }
-
-
 }

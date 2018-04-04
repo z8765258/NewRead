@@ -68,6 +68,11 @@ class Pay
             $query->SetOut_refund_no($this->products['refund_no']);
             $result = \WxPayApi::refundQuery($query);
             if($result['result_code'] != 'SUCCESS' || $result['return_code'] != 'SUCCESS'){
+                Log::init([
+                    'type' => 'File',
+                    'path' => LOG_PATH,
+                    'level' => ['error']
+                ]);
                 Log::record($result,'error');
                 Log::record('查询退款进度失败','error');
                 throw new WxRefundException('查询退款进度失败');
@@ -79,7 +84,8 @@ class Pay
                 'refund_fee' => $result['refund_fee'],
 //                'return_msg' => $result['return_msg'],
                 'refund_status' => $result['refund_status_0'],
-                'refund_success_time' => $result['refund_success_time_0']
+                'refund_success_time' => $result['refund_success_time_0'],
+                'msg' => 'OK'
             ]);
 //            halt($result);
         }
