@@ -41,12 +41,17 @@ class Pay
         if($this->checkOrderUser()){
             $refundData = $this->makeWxRefund();
             $result = \WxPayApi::refund($refundData);
+            halt($result);
             if($result['result_code'] != 'SUCCESS' || $result['return_code'] != 'SUCCESS'){
                 Log::record($result,'error');
                 Log::record('退款失败','error');
                 throw new WxRefundException();
             }
-            return json(['refund_fee'=>$result['refund_fee'],'return_msg'=>$result['return_msg']]);
+            return json([
+                'refund_fee'=>$result['refund_fee'],
+                'return_msg'=>$result['return_msg'],
+                'errorCode' => 0
+            ]);
         }
     }
 

@@ -10,7 +10,6 @@
 // +----------------------------------------------------------------------
 
 use think\Route;
-//Route::get('api/:version/banner/:id','api/:version.Banner/getBanner');
 Route::get('api/:ver/getTodayContent/','api/:ver.Content/getTodayContent');
 Route::get('api/:ver/getTypeContentNums/','api/:ver.Content/getTypeContentNums');
 Route::get('api/:ver/getAllType/','api/:ver.Course/getAllType');
@@ -27,6 +26,10 @@ Route::get('api/:ver/refundNo','api/:ver.Order/test');
 Route::get('api/:ver/wxRefund','api/:ver.Pay/courseRefund');
 Route::get('api/:ver/verifyCards','api/:ver.Card/verifyCard');
 Route::get('api/:ver/refundQuery','api/:ver.Pay/queryRefundPlan');
+Route::get('api/:ver/code','api/:ver.CreateCode/code');
+Route::get('api/:ver/verifyTodayCard','api/:ver.Card/getToDayCard');
+Route::get('api/:ver/createCode','api/:ver.Order/createCode');
+Route::get('api/:ver/getCode','api/:ver.Order/getCode');
 
 
 Route::post('api/:ver/token/user','api/:ver.Token/getToken');

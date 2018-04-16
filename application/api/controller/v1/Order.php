@@ -10,6 +10,7 @@ namespace app\api\controller\v1;
 
 
 use app\api\controller\BaseController;
+use app\api\service\RedisCache;
 use app\api\validate\IDMustBePositiveInt;
 use app\api\service\Token;
 use app\api\service\Order as OrderService;
@@ -29,29 +30,43 @@ class Order extends BaseController
      */
     public function placeOrder()
     {
+
         (new IDMustBePositiveInt())->goCheck();
         $typeID = input('post.id');
         $starttime = input('post.starttime');
         $stoptime = input('post.stoptime');
         $uid = Token::getCurrentUid();
-//        halt($uid);
-        $find = OrderModel::getOrderFind($uid,$typeID,$starttime,$stoptime);
-//        halt($find);
-        if($find){
-//            echo '已经存在该订单';
-            return[
-                'order_no' => $find->order_no,
-                'order_id' => $find->id,
-                'create_time' => $find->create_time
-            ];
+        $result = new OrderService();
+        $res = $result->verifyCode();
+        if(!$res){
+            $find = OrderModel::getOrderFind($uid,$typeID,$starttime,$stoptime);
+            if($find){
+                return[
+                    'order_no' => $find->order_no,
+                    'order_id' => $find->id,
+                    'create_time' => $find->create_time
+                ];
+            }
         }
-//        halt($typeID);
         $products = CourseModel::get($typeID);
-//        halt($products);
         $order = new OrderService();
-//        halt($order);
         $status = $order->place($uid,$products,$starttime,$stoptime);
         return $status;
+    }
+
+    public function createCode()
+    {
+//        $result = new OrderService();
+//        halt($result->verifyCode());
+        $code = RedisCache::beginReids()->createCode();
+        $res = RedisCache::beginReids()->saveCodesArray($code);
+        return $res;
+    }
+
+    public function getCode()
+    {
+        $code = RedisCache::beginReids()->getRedisCode();
+        return $code;
     }
 
 }

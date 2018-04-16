@@ -8,10 +8,10 @@
 
 namespace app\admin\controller;
 use app\admin\model\Content as ContentModel;
-use app\admin\model\Options;
-use think\Exception;
-use app\common\lib\Upload as UploadLib;
 use app\admin\model\Statement as StatementModel;
+use app\common\lib\Upload as UploadLib;
+use think\Exception;
+
 class Content extends BaseController
 {
     public function index()
@@ -32,11 +32,13 @@ class Content extends BaseController
             $data = input('post.');
             $audio = UploadLib::files('leaaudio');
             $detailAudio = UploadLib::files('detailaudio');
-            if(!$audio || !$detailAudio){
-                explode('文件上传失败',400);
+            if($audio){
+                $data['leaaudio'] = config('qiniu.audio_url').'/'.$audio;
             }
-            $data['leaaudio'] = config('qiniu.audio_url').'/'.$audio;
-            $data['detailaudio'] = config('qiniu.audio_url').'/'.$detailAudio;
+            if($detailAudio){
+                $data['detailaudio'] = config('qiniu.audio_url').'/'.$detailAudio;
+            }
+
             try{
                 $id = $content->add($data);
             }catch (\Exception $e){
@@ -77,8 +79,13 @@ class Content extends BaseController
             $data = input('post.');
             $image = UploadLib::files('cardimg');
             $audio = UploadLib::files('leaaudio');
-            $data['cardimg'] = config('qiniu.audio_url').'/'.$image;
-            $data['leaaudio'] = config('qiniu.audio_url').'/'.$audio;
+            if($image){
+                $data['cardimg'] = config('qiniu.audio_url').'/'.$image;
+            }
+           if($audio){
+               $data['leaaudio'] = config('qiniu.audio_url').'/'.$audio;
+           }
+
             $save = $content->save($data,['id' => input('id')]);
             if($save !== false){
                 $this->success('修改成功！',url('index'));

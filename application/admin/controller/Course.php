@@ -56,7 +56,9 @@ class Course extends BaseController
         if(request()->isPost()){
             $data = input('post.');
             $image = UploadLib::files('img');
-            $data['img'] = config('qiniu.audio_url').'/'.$image;
+            if($image){
+                $data['img'] = config('qiniu.audio_url').'/'.$image;
+            }
             $save = $course->save($data,['id' => input('id')]);
             if($save !== false){
                 $this->success('修改成功！',url('index'));

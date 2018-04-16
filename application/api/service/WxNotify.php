@@ -33,6 +33,12 @@ class WxNotify extends \WxPayNotify
                     $find = User::get($order->user_id);
                     $this->createPlan($order->user_id,$order->typeid,$find->openid,$order->starttime,$order->stoptime);
                 }
+                if(!empty($order->activitycode)){
+                    $this->clearRedisCode($order->activitycode);
+                }
+//                if($order->isFission){
+//                    $this->updateSuggestedUsers($order->isFission);
+//                }
                 Db::commit();
             }catch (Exception $e){
                 Db::rollback();
@@ -41,6 +47,22 @@ class WxNotify extends \WxPayNotify
             }
         }
         return true;
+    }
+
+    private function clearRedisCode($activitycode)
+    {
+        $codes = RedisCache::beginReids()->getRedisCode();
+        for ($i=0;$i<count($codes);$i++){
+            if($codes[$i]['code'] == $activitycode){
+                unset($codes[$i]);
+            }
+        }
+        $result = RedisCache::beginReids()->_save($codes);
+    }
+
+    private function updateSuggestedUsers($uid)
+    {
+        User::where('id',$uid)->setInc('guide');
     }
 
     private function updateOrderStatus($orderID)

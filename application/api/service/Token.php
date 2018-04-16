@@ -45,6 +45,18 @@ class Token
         }
     }
 
+    /**
+     * 获取客户端传入的邀请码
+     */
+    public static function getCurrentInvitationCode()
+    {
+        $InvitationCode = Request::instance()->header('invitationCode');
+        if(!$InvitationCode){
+            return null;
+        }
+        return $InvitationCode;
+    }
+
 
     public static function verifyToken($token)
     {

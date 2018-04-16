@@ -17,7 +17,7 @@ use app\lib\exception\CardException;
 class Card extends BaseController
 {
     protected $beforeActionList = [
-        'checkPrimaryScope' => ['only' => 'createCardRecord,getCardList,getCardRanking,verifyCard'],
+        'checkPrimaryScope' => ['only' => 'createCardRecord,getCardList,getCardRanking,verifyCard,getToDayCard'],
     ];
 
     /**
@@ -40,6 +40,12 @@ class Card extends BaseController
         (new IDMustBePositiveInt())->goCheck();
         $list = CardModel::getCardList($id);
         return $list;
+    }
+
+    public function getToDayCard($id)
+    {
+        (new IDMustBePositiveInt())->goCheck();
+        return CardModel::isHaveRecord($id);
     }
 
     /**

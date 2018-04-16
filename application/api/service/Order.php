@@ -9,6 +9,7 @@
 namespace app\api\service;
 
 use app\api\model\Order as OrderModel;
+use think\cache\driver\Redis;
 use think\Exception;
 
 class Order
@@ -37,13 +38,19 @@ class Order
 
     private function createOrder()
     {
+        $isOnSale = $this->verifyCode();
         try{
             $orderNo = self::makeOrderNo();
             $redundNo = self::makeRefundNo();
             $order = new OrderModel();
             $order->user_id = $this->uid;
             $order->order_no = $orderNo;
-            $order->price = $this->products['price'];
+            if(!$isOnSale){
+                $order->price = $this->products['price'];
+            }else{
+                $order->activitycode = $isOnSale;
+                $order->price = $this->products['preprice'];
+            }
             $order->typename = $this->products['coursename'];
             $order->typeid = $this->products['id'];
             $order->status = 1;
@@ -62,6 +69,27 @@ class Order
         }catch (Exception $e){
             throw $e;
         }
+    }
+
+    public function verifyCode()
+    {
+        $InvitationCode = Token::getCurrentInvitationCode();
+        if(!$InvitationCode){
+            return false;
+        }
+        $res = RedisCache::beginReids()->getRedisCode();
+        if($res){
+//            $newData = array();
+            $result = false;
+            for ($i=0;$i<count($res);$i++){
+                if($res[$i]['code'] == $InvitationCode){
+                    $result = $res[$i]['code'];
+                    break;
+                }
+            }
+            return $result;
+        }
+        return false;
     }
 
 

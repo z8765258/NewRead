@@ -34,6 +34,7 @@ class UserToken extends Token
     public function get()
     {
         $result = curl_get($this->wxLoginUrl);
+
         $wxResult = json_decode($result,true);
 //        halt($wxResult);
         if(empty($wxResult)){
@@ -100,6 +101,7 @@ class UserToken extends Token
         $cachedValue = $wxResult;
         $cachedValue['uid'] = $uid;
         $cachedValue['scope'] = ScopeEnum::User;
+//        halt($cachedValue);
         return $cachedValue;
     }
 

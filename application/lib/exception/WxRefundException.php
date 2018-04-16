@@ -13,5 +13,5 @@ class WxRefundException extends BaseException
 {
     public $code = 400;
     public $msg = '退款失败,请稍后重试';
-    public $errorCode = 10000;
+    public $errorCode = 10006;
 }

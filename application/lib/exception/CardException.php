@@ -13,5 +13,5 @@ class CardException extends BaseException
 {
     public $code = 200;
     public $msg = '没有按时连续21天打卡';
-    public $errorCode = 10001;
+    public $errorCode = 30001;
 }

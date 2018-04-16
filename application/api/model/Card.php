@@ -10,6 +10,7 @@ namespace app\api\model;
 
 
 use app\api\service\Token;
+use think\Log;
 
 class Card extends BaseModel
 {
@@ -28,6 +29,14 @@ class Card extends BaseModel
         }
         $ispass = self::isPass($tid);
         $res = self::create(['tid'=>$tid,'uid'=>Token::getCurrentUid(),'ispass'=> $ispass]);
+        if(!$res){
+            Log::init([
+                'type' => 'File',
+                'path' => LOG_PATH,
+                'level' => ['error']
+            ]);
+            Log::record('打卡记录没有成功'.$res,'error');
+        }
         return $res;
     }
 
@@ -36,7 +45,7 @@ class Card extends BaseModel
      * @return bool
      * 查询该用户在该课程下的所有打卡记录，如果有今天的打卡记录就不记录，如果没有今天的就去数据库记录今天的打卡。
      */
-    private static function isHaveRecord($tid)
+    public static function isHaveRecord($tid)
     {
         $uid = Token::getCurrentUid();
         $plan = self::where(['uid' => $uid,'tid'=>$tid])->select();
@@ -151,8 +160,8 @@ class Card extends BaseModel
         $whereData['uid'] = $uid;
         $whereData['ispass'] = 1;
         $whereData['tid'] = $id;
-        $cards = self::where($whereData)->order('create_time asc')->select();
-        if(count($cards) !== 21){
+        $cards = self::where($whereData)->order('create_time asc')->limit(21)->select();
+        if(count($cards) < 21){
             return false;
         }
         return self::verifyCardsTime($cards);
@@ -162,7 +171,11 @@ class Card extends BaseModel
     {
         $arr = [];
         for ($i=0;$i<count($cards);$i++){
-            array_push($arr,$cards[$i]['create_time']);
+            if($cards[$i]['ispass']){
+                array_push($arr,$cards[$i]['create_time']);
+            }else{
+                return false;
+            }
         }
         $flag = true;
         for($i=0;$i<count($arr)-1;$i++){

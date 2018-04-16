@@ -12,7 +12,7 @@ namespace app\api\model;
 class Course extends BaseModel
 {
     protected $hidden = ['create_time','delete_time','update_time'];
-    public static function getTypesPay()
+    public  function getTypesPay()
     {
         $allType = self::all();
         $sta = Order::getUserPay();

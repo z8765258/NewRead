@@ -25,7 +25,6 @@ class Admin extends Controller
             }
             $data['password'] = md5($data['password'].'_#sing_ty');
             $data['status'] = 1;
-//            halt($data);
             try{
                 $AdminUser = new AdminUser();
                 $id = $AdminUser->add($data);

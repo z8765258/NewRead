@@ -13,5 +13,5 @@ class PlanException extends BaseException
 {
     public $code = 400;
     public $msg = '添加用户学习进度失败';
-    public $errorCode = 70001;
+    public $errorCode = 20001;
 }
