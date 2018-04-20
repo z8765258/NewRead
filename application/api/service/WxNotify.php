@@ -36,9 +36,9 @@ class WxNotify extends \WxPayNotify
                 if(!empty($order->activitycode)){
                     $this->clearRedisCode($order->activitycode);
                 }
-//                if($order->isFission){
-//                    $this->updateSuggestedUsers($order->isFission);
-//                }
+                if($order->isFission){
+                    $this->updateSuggestedUsers($order->isFission);
+                }
                 Db::commit();
             }catch (Exception $e){
                 Db::rollback();
@@ -62,7 +62,7 @@ class WxNotify extends \WxPayNotify
 
     private function updateSuggestedUsers($uid)
     {
-        User::where('id',$uid)->setInc('guide');
+       return User::where('id',$uid)->setInc('renums');
     }
 
     private function updateOrderStatus($orderID)

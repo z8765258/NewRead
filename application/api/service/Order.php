@@ -18,6 +18,7 @@ class Order
     protected $products;
     protected $starttime;
     protected $stoptime;
+    protected $scene;
     function __construct()
     {
     }
@@ -26,11 +27,12 @@ class Order
      * @param $uid int 用户id
      * @param $products array 商品信息
      */
-    public function place($uid,$products,$starttime,$stoptime)
+    public function place($uid,$products,$starttime,$stoptime,$scene)
     {
         $this->products = $products;
         $this->starttime = $starttime;
         $this->stoptime = $stoptime;
+        $this->scene = $scene;
         $this->uid = $uid;
         $status = self::createOrder();
         return $status;
@@ -52,6 +54,7 @@ class Order
                 $order->price = $this->products['preprice'];
             }
             $order->typename = $this->products['coursename'];
+            $order->scene = $this->scene;
             $order->typeid = $this->products['id'];
             $order->status = 1;
             $order->refund_no = $redundNo;
@@ -83,6 +86,7 @@ class Order
             $result = false;
             for ($i=0;$i<count($res);$i++){
                 if($res[$i]['code'] == $InvitationCode){
+//                    array_merge();
                     $result = $res[$i]['code'];
                     break;
                 }
@@ -90,6 +94,10 @@ class Order
             return $result;
         }
         return false;
+
+
+
+
     }
 
 

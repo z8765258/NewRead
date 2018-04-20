@@ -116,25 +116,47 @@ class Card extends BaseModel
 //        halt($toDay);
     }
 
-    private static function uidCardNums($cards)
+    private static function uidCardNums($id)
     {
         $uid = Token::getCurrentUid();
-        $arr = [];
-        for ($i=0;$i<count($cards);$i++){
-            if($cards[$i]['uid'] == $uid){
-                array_push($arr,$cards[$i]);
-            }
-        }
-        return count($arr) + 1;
+//        $arr = [];
+        $where['uid'] = $uid;
+        $where['tid'] = $id;
+        $count = self::where($where)->count();
+        return $count;
+//        for ($i=0;$i<count($cards);$i++){
+//            if($cards[$i]['uid'] == $uid){
+//                array_push($arr,$cards[$i]);
+//            }
+//        }
+//        return count($arr) + 1;
     }
+
+//    public static function getCardRank($id)
+//    {
+//        $data['typeid'] = $id;
+//        $data['status'] = 2;
+//        $pays = Order::where($data)->count();
+//        $cards = self::where('tid','=',$id)->select();
+//        $card = self::isHorizon($cards);
+//        $arr['surpass'] = self::getNum($card,$pays);
+//        $arr['cardNum'] = self::uidCardNums($cards);
+//        return $arr;
+//    }
 
     public static function getCardRank($id)
     {
-        $pays = Order::where('typeid','=',$id)->count();
-        $cards = self::where('tid','=',$id)->select();
+        $data['typeid'] = $id;
+        $data['status'] = 2;
+        $pays = Order::where($data)->count();
+        $start = date('Y-m-d 00:00:00');
+        $end = date('Y-m-d H:i:s');
+        $sql = "SELECT * FROM `table_name` WHERE `time` >= unix_timestamp( '$start' ) AND `time` <= unix_timestamp( '$end' )";
+        $cards = self::query($sql);
         $card = self::isHorizon($cards);
         $arr['surpass'] = self::getNum($card,$pays);
-        $arr['cardNum'] = self::uidCardNums($cards);
+//        $arr['surpass'] = '80%';
+        $arr['cardNum'] = self::uidCardNums($id);
         return $arr;
     }
 

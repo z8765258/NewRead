@@ -10,14 +10,14 @@ namespace app\api\controller\v1;
 
 
 use app\api\controller\BaseController;
-use app\api\validate\IDMustBePositiveInt;
-use app\api\validate\UserValidate;
 use app\api\model\User as UserModel;
+use app\api\service\Token as TokenService;
+use app\api\validate\UserValidate;
 
 class User extends BaseController
 {
     protected $beforeActionList = [
-        'checkPrimaryScope' => ['only' => 'updateUserInfo'],
+        'checkPrimaryScope' => ['only' => 'updateUserInfo,getUserInfo'],
     ];
 
     /**
@@ -31,5 +31,17 @@ class User extends BaseController
         (new UserValidate())->goCheck();
         $res = UserModel::updateUserInfo($infoStr);
         return $res;
+    }
+
+    public function getUserInfo()
+    {
+        $uid = TokenService::getCurrentUid();
+        $res = UserModel::get($uid);
+        return $res;
+    }
+
+    public function isPays()
+    {
+        return false;
     }
 }

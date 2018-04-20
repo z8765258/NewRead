@@ -28,10 +28,9 @@ class Course extends BaseController
         }
         return $status;
     }
-
+    
     public function getUserTypePay()
     {
-
 //        return $status;
     }
 }

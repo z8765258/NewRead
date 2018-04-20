@@ -35,6 +35,7 @@ class Order extends BaseController
         $typeID = input('post.id');
         $starttime = input('post.starttime');
         $stoptime = input('post.stoptime');
+        $scene = input('post.scene');
         $uid = Token::getCurrentUid();
         $result = new OrderService();
         $res = $result->verifyCode();
@@ -50,7 +51,7 @@ class Order extends BaseController
         }
         $products = CourseModel::get($typeID);
         $order = new OrderService();
-        $status = $order->place($uid,$products,$starttime,$stoptime);
+        $status = $order->place($uid,$products,$starttime,$stoptime,$scene);
         return $status;
     }
 

@@ -30,8 +30,11 @@ Route::get('api/:ver/code','api/:ver.CreateCode/code');
 Route::get('api/:ver/verifyTodayCard','api/:ver.Card/getToDayCard');
 Route::get('api/:ver/createCode','api/:ver.Order/createCode');
 Route::get('api/:ver/getCode','api/:ver.Order/getCode');
+Route::get('api/:ver/getUser','api/:ver.User/getUserInfo');
+Route::get('api/:ver/isPays','api/:ver.User/isPays');
 
 
+Route::post('api/:ver/tixian','api/:ver.tixian/tixian');
 Route::post('api/:ver/token/user','api/:ver.Token/getToken');
 Route::post('api/:ver/token/verify','api/:ver.Token/verifyToken');
 
